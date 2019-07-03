@@ -34,12 +34,10 @@ void init(struct zfp_data *zfp)
 int get_exp(double d)
 {
     int exp = 0;
-    while ( (int)(d / 2) > 0) {
+    while (d >= 1.0) {
         exp++;
         d /= 2;
     }
-    if (d >0)
-        exp++;
     return exp;
 }
 
