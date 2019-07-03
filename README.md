@@ -1,2 +1,1 @@
-# ZFP-Algorithm
-ZFP-Algorithm in C
+# Simple ZFP Algorithm for C code  
