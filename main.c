@@ -12,8 +12,8 @@ int main(void) {
     compress(zfp);
 
     /** Decompress Data */
-//    decompress(zfp);
+    decompress(zfp);
 
     /** Show loss */
-//    show_loss(zfp);
+    show_loss(zfp);
 }

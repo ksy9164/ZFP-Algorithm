@@ -7,6 +7,7 @@
 #include <stdint.h>
 #include <inttypes.h>
 
+/* Math Definition */
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
@@ -25,6 +26,7 @@
 /* Set bit budget */
 #define BIT_BUDGET 8*8*2
 
+/* Main struct of ZFP */
 struct zfp_data {
     uint8_t* buffer;
     int bufferbytes;
@@ -43,7 +45,48 @@ struct zfp_data {
 
     int64_t *idata;
     uint64_t *udata;
+
+    int exp_max;
+
+    uint64_t *udata_restored;
 };
+
+/* init */
+void init(struct zfp_data *zfp);
+
+/* Compress */
+void compress(struct zfp_data *zfp);
+void convert_to_fixtedpoint(struct zfp_data *zfp);
+void block_trans(struct zfp_data *zfp);
+void embedded_coding(struct zfp_data *zfp);
+
+/* Decompress */
+void decompress(struct zfp_data *zfp);
+void restore_embeded_data(struct zfp_data *zfp);
+void restore_transed_data(struct zfp_data *zfp);
+void convert_to_double(struct zfp_data *zfp);
+
+/* Math Function */
+int get_exp(double d);
+double pow(double base, double exponent);
+double abs_double(double d);
+
+/* Lift & UnLift Algorithm */
+static void fwd_lift_int64(int64_t* p, unsigned int s);
+static void inv_lift_int64(int64_t* p, uint64_t s);
+
+/* Convert int to uint & uint to int */
+static int64_t uint2int_uint64(uint64_t x);
+static uint64_t int2uint_int64(int64_t x);
+
+/* Encode & Decode */
+void EncodeBit(struct zfp_data *zfp, uint64_t src);
+void EncodeBits(struct zfp_data *zfp, uint64_t src, int bits);
+void DecodeBit(struct zfp_data *zfp, uint64_t *dst);
+void DecodeBits(struct zfp_data *zfp,uint64_t *dst, int bits);
+
+/* Show loss of Compression */
+void show_loss(struct zfp_data *zfp);
 
 /* Permutation array */
 static const uint8_t perm_2[16] __attribute__((aligned(0x100))) = {
@@ -73,26 +116,5 @@ static const uint8_t perm_2[16] __attribute__((aligned(0x100))) = {
  
   ((3) + 4 * (3)), // 15
 };
-
-void init(struct zfp_data *zfp);
-
-void compress(struct zfp_data *zfp);
-void convert_to_fixtedpoint(struct zfp_data *zfp);
-int get_exp(double d);
-double pow (double base, double exponent);
-void block_trans(struct zfp_data *zfp);
-void embedded_coding(struct zfp_data *zfp);
-
-/* void decompress(struct zfp_data *zfp);
- * void show_loss(struct zfp_data *zfp); */
-
-/* Lift Algorithm */
-static void fwd_lift_int64(int64_t* p, unsigned int s);
-
-static int64_t uint2int_uint64(uint64_t x);
-static uint64_t int2uint_int64(int64_t x);
-
-void EncodeBit(struct zfp_data *zfp, uint64_t src);
-void EncodeBits(struct zfp_data *zfp, uint64_t src, int bits);
 
 #endif
